@@ -20,13 +20,14 @@
 ~~~~~~~~~~ VENTAS POR DIA ~~~~~~~~~~<br>
 {% for i in dias %}
     <p>
-        <p><i>{{i}}</i><br></p>
-        {% for j in ventas %}
-            {% if j.fecha.date == i %}
-                &emsp;&emsp;{{j.nombre}}<br>
-                &emsp;&emsp;&emsp;&emsp;{{j.fecha}}<br>
+        <p><i>{{i.dia}}</i><br></p>
+        {% for j in i.ventas %}
+                &emsp;&emsp;{{j.nombre}} -- {{j.fecha.time}}<br>
+                {% for k in j.pedidos %}
+                    &emsp;&emsp;&emsp;&emsp;{{k.elemento}}<br>
+                    &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;{{k.precio}}<br>
+                {% endfor %}
                 &emsp;&emsp;&emsp;&emsp;Total: {{j.total}}<br><br>
-            {% endif %}
         {% endfor %}
     </p>
     ~ ~ ~ ~ ~ ~ ~ ~ ~ ~<br>
@@ -55,22 +56,17 @@
 
 ~~~~~~~~~~ VENTAS POR CLIENTE ~~~~~~~~~~<br>
 {% for i in clientes %}
-    <p>
-        <p><i>{{i}}</i><br></p>
-        {% for j in ventas %}
-            {% if j.nombre == i %}
-                &emsp;&emsp;{{j.fecha}}<br>
-                {% for k in j.pedidos %}
-                    &emsp;&emsp;&emsp;&emsp;{{k.tamaño}} -- {{k.elemento}}<br>
-                    {% for l in k.ingredientes %}
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;{{l.ingrediente}} -- {{l.precio}}<br>
-                    {% endfor %}
-                    &emsp;&emsp;&emsp;&emsp;{{k.precio}}<br>
-                {% endfor %}
-                &emsp;&emsp;&emsp;&emsp;Total: {{j.total}}<br><br>
-            {% endif %}
-        {% endfor %}
-    </p>
-    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~<br>
+<p>
+    <p><i>{{i.cliente}}</i><br></p>
+    {% for j in i.ventas %}
+            &emsp;&emsp;{{j.nombre}} -- {{j.fecha}}<br>
+            {% for k in j.pedidos %}
+                &emsp;&emsp;&emsp;&emsp;{{k.elemento}}<br>
+                &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;{{k.precio}}<br>
+            {% endfor %}
+            &emsp;&emsp;&emsp;&emsp;Total: {{j.total}}<br><br>
+    {% endfor %}
+</p>
+~ ~ ~ ~ ~ ~ ~ ~ ~ ~<br>
 {% endfor %}
 <br><br><br><br><br><br><br><br>

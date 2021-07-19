@@ -37,17 +37,24 @@ def index(request):
     ##########
 
     ## Listado de las ventas por día
-    dias=[]
+    dias=[]     ## Guarda todos los dias en la base de datos
     for i in ventas_realizadas_general:
         if i['fecha'].date() not in dias:
             dias.append(i['fecha'].date())
 
+    ventas_por_dia=[]       ## Guarda un diccionario con dia y todas las ordenes de dicho dia
+    for i in dias:
+        ventas_por_este_dia=[]
+        for j in ventas_realizadas_general:
+            if j['fecha'].date() == i:
+                ventas_por_este_dia.append(j)
+        ventas_por_dia.append({'dia':i,'ventas':ventas_por_este_dia})                    
+    print(ventas_por_dia)
 
     ## Listado de ventas por tamaño
 
     sandwich_por_tamaño=[]      ## Aqui se guarda un diccionario con cada tamaño y sus sandwiches correspondientes
     for i in tamaños:
-        print(i)
         sandwich_de_este_tamaño=[]
         for j in sandwiches:
             if j.tamaño==i:
@@ -76,13 +83,21 @@ def index(request):
 
     ## Listado de ventas por cliente
 
-    clientes=[]
+    clientes=[]     ## Guarda todos los nombres de clientes en la base de datos
     for i in ventas_realizadas_general:
         if i['nombre'] not in clientes:
             clientes.append(i['nombre'])
 
+    ventas_por_cliente=[]       ## Guarda un diccionario que tiene un cliente y todas sus ordenes
+    for i in clientes:
+        ventas_por_este_cliente=[]
+        for j in ventas_realizadas_general:
+            if j['nombre'] == i:
+                ventas_por_este_cliente.append(j)
+        ventas_por_cliente.append({'cliente':i,'ventas':ventas_por_este_cliente})                    
+
     #########################
 
  
-    return render(request, 'app/index.html',{'ventas':ventas_realizadas_general, 'dias':dias, 'sandwichPorTamaño':sandwich_por_tamaño, 'sandwichPorIngrediente':sandwich_por_ingrediente, 'clientes':clientes})
+    return render(request, 'app/index.html',{'ventas':ventas_realizadas_general, 'dias':ventas_por_dia, 'sandwichPorTamaño':sandwich_por_tamaño, 'sandwichPorIngrediente':sandwich_por_ingrediente, 'clientes':ventas_por_cliente})
 
