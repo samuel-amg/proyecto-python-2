@@ -1,3 +1,4 @@
+~~~~~~~~~~ VENTAS TOTALES ~~~~~~~~~~<br>
 {% for i in ventas %}
     <p>
         {{i.nombre}}<br>
@@ -12,4 +13,37 @@
         {% endfor %}
         Total: {{i.total}}<br><br>
     </p>
+    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~<br>
+{% endfor %}
+
+~~~~~~~~~~ VENTAS POR DIA ~~~~~~~~~~<br>
+{% for i in dias %}
+    <p>
+        <p><i>{{i}}</i><br></p>
+        {% for j in ventas %}
+            {% if j.fecha.date == i %}
+                &emsp;&emsp;{{j.nombre}}<br>
+                &emsp;&emsp;&emsp;&emsp;{{j.fecha}}<br>
+                &emsp;&emsp;&emsp;&emsp;Total: {{j.total}}<br><br>
+            {% endif %}
+        {% endfor %}
+    </p>
+    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~<br>
+{% endfor %}
+
+~~~~~~~~~~ VENTAS POR TAMAÑO DE SANDWICH ~~~~~~~~~~<br>
+{% for i in sandwichPorTamaño %}
+    <p><i>{{i.tamaño}}<br></i></p>
+    {% for j in i.sandwiches%}
+    &emsp;&emsp;{{j.sandwich}} -- {{j.orden.cliente}} -- {{j.orden.fecha}} -- {{j.sandwich.precio}}<br>
+    {% endfor %}
+    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~<br>
+{% endfor %}
+
+~~~~~~~~~~ VENTAS POR INGREDIENTE ~~~~~~~~~~<br>
+{% for i in sandwichPorIngrediente %}
+    <p><i>{{i.ingrediente}}<br></i></p>
+    {% for j in i.sandwiches%}
+    &emsp;&emsp;{{j.sandwich}} -- {{j.orden.cliente}} -- {{j.orden.fecha}} -- {{j.sandwich.precio}}<br>
+    {% endfor %}
 {% endfor %}

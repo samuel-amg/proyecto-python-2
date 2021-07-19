@@ -112,7 +112,7 @@ def actualizarPrecioSandwich(sender, instance, **kwargs):
         orden = Orden.objects.get(id=OrdenSandwich.objects.get(sandwich=t).orden.id)
         orden.save()
     except:
-        print("Fallo")   
+        print("El sandwich es nuevo.")   
 
 post_save.connect(actualizarPrecioSandwich, sender=IngredientesSandwich)
 post_delete.connect(actualizarPrecioSandwich, sender=IngredientesSandwich)
