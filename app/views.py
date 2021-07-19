@@ -51,10 +51,11 @@ def index(request):
         sandwich_de_este_tamaño=[]
         for j in sandwiches:
             if j.tamaño==i:
-                sandwich_de_este_tamaño.append({'sandwich':j, 'orden':orden.get(id=ordenSandwich.get(sandwich=j).orden.id)})
+                orden_aux = orden.get(id=ordenSandwich.get(sandwich=j).orden.id)
+                sandwich_aux = j
+                sandwich_de_este_tamaño.append({'sandwich':sandwich_aux, 'orden':orden_aux})
 
         sandwich_por_tamaño.append({'tamaño':i.nombre,'sandwiches':sandwich_de_este_tamaño})
-        print(sandwich_por_tamaño)
 
     #########################
 
@@ -65,15 +66,23 @@ def index(request):
         sandwich_con_este_ingrediente=[]
         for j in ingredientesSandwich:
             if j.ingrediente==i:
-                ordenSandwich_aux = ordenSandwich.get(sandwich=j.sandwich)
                 orden_aux = orden.get(id=ordenSandwich.get(sandwich=j.sandwich).orden.id)
-                sandwich_aux = sandwiches.get(id=ordenSandwich_aux.sandwich.id)
+                sandwich_aux = sandwiches.get(id=ordenSandwich.get(sandwich=j.sandwich).sandwich.id)
                 if {'sandwich':sandwich_aux,'orden':orden_aux} not in sandwich_con_este_ingrediente:
                     sandwich_con_este_ingrediente.append({'sandwich':sandwich_aux,'orden':orden_aux})
         sandwich_por_ingrediente.append({'ingrediente':i.nombre,'sandwiches':sandwich_con_este_ingrediente})
   
-    #############
+    #########################
+
+    ## Listado de ventas por cliente
+
+    clientes=[]
+    for i in ventas_realizadas_general:
+        if i['nombre'] not in clientes:
+            clientes.append(i['nombre'])
+
+    #########################
 
  
-    return render(request, 'app/index.html',{'ventas':ventas_realizadas_general, 'dias':dias, 'sandwichPorTamaño':sandwich_por_tamaño, 'sandwichPorIngrediente':sandwich_por_ingrediente})
+    return render(request, 'app/index.html',{'ventas':ventas_realizadas_general, 'dias':dias, 'sandwichPorTamaño':sandwich_por_tamaño, 'sandwichPorIngrediente':sandwich_por_ingrediente, 'clientes':clientes})
 

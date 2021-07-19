@@ -15,6 +15,7 @@
     </p>
     ~ ~ ~ ~ ~ ~ ~ ~ ~ ~<br>
 {% endfor %}
+<br><br><br><br><br><br><br><br>
 
 ~~~~~~~~~~ VENTAS POR DIA ~~~~~~~~~~<br>
 {% for i in dias %}
@@ -30,6 +31,7 @@
     </p>
     ~ ~ ~ ~ ~ ~ ~ ~ ~ ~<br>
 {% endfor %}
+<br><br><br><br><br><br><br><br>
 
 ~~~~~~~~~~ VENTAS POR TAMAÑO DE SANDWICH ~~~~~~~~~~<br>
 {% for i in sandwichPorTamaño %}
@@ -39,6 +41,7 @@
     {% endfor %}
     ~ ~ ~ ~ ~ ~ ~ ~ ~ ~<br>
 {% endfor %}
+<br><br><br><br><br><br><br><br>
 
 ~~~~~~~~~~ VENTAS POR INGREDIENTE ~~~~~~~~~~<br>
 {% for i in sandwichPorIngrediente %}
@@ -46,4 +49,28 @@
     {% for j in i.sandwiches%}
     &emsp;&emsp;{{j.sandwich}} -- {{j.orden.cliente}} -- {{j.orden.fecha}} -- {{j.sandwich.precio}}<br>
     {% endfor %}
+    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~<br>
 {% endfor %}
+<br><br><br><br><br><br><br><br>
+
+~~~~~~~~~~ VENTAS POR CLIENTE ~~~~~~~~~~<br>
+{% for i in clientes %}
+    <p>
+        <p><i>{{i}}</i><br></p>
+        {% for j in ventas %}
+            {% if j.nombre == i %}
+                &emsp;&emsp;{{j.fecha}}<br>
+                {% for k in j.pedidos %}
+                    &emsp;&emsp;&emsp;&emsp;{{k.tamaño}} -- {{k.elemento}}<br>
+                    {% for l in k.ingredientes %}
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;{{l.ingrediente}} -- {{l.precio}}<br>
+                    {% endfor %}
+                    &emsp;&emsp;&emsp;&emsp;{{k.precio}}<br>
+                {% endfor %}
+                &emsp;&emsp;&emsp;&emsp;Total: {{j.total}}<br><br>
+            {% endif %}
+        {% endfor %}
+    </p>
+    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~<br>
+{% endfor %}
+<br><br><br><br><br><br><br><br>
