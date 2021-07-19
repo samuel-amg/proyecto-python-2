@@ -1,1 +1,15 @@
-Hola
+{% for i in ventas %}
+    <p>
+        {{i.nombre}}<br>
+        {{i.fecha}}<br>
+        {% for j in i.pedidos %}
+            &emsp;&emsp;{{j.elemento}}<br>
+            &emsp;&emsp;{{j.tamaño}}<br>
+            {% for k in j.ingredientes %}
+                &emsp;&emsp;&emsp;&emsp;{{k.ingrediente}} - {{k.precio}}<br>
+            {% endfor %}
+            &emsp;&emsp;Precio item: {{j.precio}}<br><br>
+        {% endfor %}
+        Total: {{i.total}}<br><br>
+    </p>
+{% endfor %}

@@ -13,11 +13,11 @@ class IngredienteAdmin(admin.ModelAdmin):
 
 @admin.register(Sandwich)
 class SandwichAdmin(admin.ModelAdmin):
-    list_display = ("__str__", "tamaño",)
+    list_display = ("__str__", "tamaño","precio")
 
 @admin.register(IngredientesSandwich)
 class IngredientesSandwichAdmin(admin.ModelAdmin):
-    list_display = ("__str__",)
+    list_display = ("__str__", "precio")
 
 @admin.register(Orden)
 class OrdenAdmin(admin.ModelAdmin):
