@@ -1,7 +1,26 @@
 import React from 'react';
+import {
+  BrowserRouter,
+  Switch,
+  Route
+} from 'react-router-dom';
+
+import Navbar from './components/Navbar';
+import HomeRoute from './pages/home/HomeRoute';
+import NewOrderRoute from './pages/new-order/NewOrderRoute';
+import AdminRoute from './pages/admin/AdminRoute';
 
 export default function App() {
   return (
-    <h1 className="bg-carmine">Hola</h1>
+    <BrowserRouter>
+      <Navbar />
+      <div className="container-fluid">
+        <Switch>
+          <Route exact path="/new-order" component={NewOrderRoute} />
+          <Route exact path="/admin" component={AdminRoute} />
+          <Route path="/" component={HomeRoute} />
+        </Switch>
+      </div>
+    </BrowserRouter>
   );
 }
