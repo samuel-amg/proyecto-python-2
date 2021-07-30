@@ -43,19 +43,25 @@ def index(request):
             dias.append(i['fecha'].date())
 
     ventas_por_dia=[]       ## Guarda un diccionario con dia y todas las ordenes de dicho dia
+
     for i in dias:
         ventas_por_este_dia=[]
+
         for j in ventas_realizadas_general:
             if j['fecha'].date() == i:
                 ventas_por_este_dia.append(j)
+
         ventas_por_dia.append({'dia':i,'ventas':ventas_por_este_dia})                    
+
     print(ventas_por_dia)
 
     ## Listado de ventas por tamaño
 
     sandwich_por_tamaño=[]      ## Aqui se guarda un diccionario con cada tamaño y sus sandwiches correspondientes
+
     for i in tamaños:
         sandwich_de_este_tamaño=[]
+
         for j in sandwiches:
             if j.tamaño==i:
                 orden_aux = orden.get(id=ordenSandwich.get(sandwich=j).orden.id)
@@ -69,14 +75,18 @@ def index(request):
     ## Listado de las ventas por ingredientes
 
     sandwich_por_ingrediente = []     ## Aqui se guarda un diccionario con cada ingrediente y sus correspondientes sandwiches
+    
     for i in ingredientes:
         sandwich_con_este_ingrediente=[]
+
         for j in ingredientesSandwich:
             if j.ingrediente==i:
                 orden_aux = orden.get(id=ordenSandwich.get(sandwich=j.sandwich).orden.id)
                 sandwich_aux = sandwiches.get(id=ordenSandwich.get(sandwich=j.sandwich).sandwich.id)
+                
                 if {'sandwich':sandwich_aux,'orden':orden_aux} not in sandwich_con_este_ingrediente:
                     sandwich_con_este_ingrediente.append({'sandwich':sandwich_aux,'orden':orden_aux})
+
         sandwich_por_ingrediente.append({'ingrediente':i.nombre,'sandwiches':sandwich_con_este_ingrediente})
   
     #########################
@@ -84,16 +94,21 @@ def index(request):
     ## Listado de ventas por cliente
 
     clientes=[]     ## Guarda todos los nombres de clientes en la base de datos
+
     for i in ventas_realizadas_general:
         if i['nombre'] not in clientes:
+
             clientes.append(i['nombre'])
 
     ventas_por_cliente=[]       ## Guarda un diccionario que tiene un cliente y todas sus ordenes
+
     for i in clientes:
         ventas_por_este_cliente=[]
+
         for j in ventas_realizadas_general:
             if j['nombre'] == i:
                 ventas_por_este_cliente.append(j)
+
         ventas_por_cliente.append({'cliente':i,'ventas':ventas_por_este_cliente})                    
 
     #########################
