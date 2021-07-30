@@ -1,0 +1,49 @@
+@import "~bootstrap/scss/utilities";
+
+$utilities: map-merge(
+  $utilities,
+  (
+    "color": (
+      map-merge(
+        map-get($utilities, "color"),
+        (
+          values: map-merge(
+            map-get(map-get($utilities, "color"), "values"),
+            $colors
+          )
+        )
+      )
+    ),
+    "gray": (
+      property: color,
+      class: text-gray,
+      values: $grays
+    ),
+    "background-color": (
+      map-merge(
+        map-get($utilities, "background-color"),
+        (
+          values: map-merge(
+            map-get(map-get($utilities, "background-color"), "values"),
+            $colors
+          )
+        )
+      )
+    ),
+    "background-gray": (
+      property: background-color,
+      class: bg-gray,
+      values: $grays
+    ),
+    "font-weight": (
+      property: font-weight,
+      class: fw,
+      values: map-merge(
+        map-get(map-get($utilities, "font-weight"), "values"),
+        (
+          semi-bold: $font-weight-semi-bold
+        )
+      )
+    )
+  )
+);

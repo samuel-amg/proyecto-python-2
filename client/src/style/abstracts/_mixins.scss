@@ -1,0 +1,21 @@
+// Bootstrap mixins
+// ============================================================================
+
+@import "~bootstrap/scss/mixins";
+
+// Theme mixins
+// ============================================================================
+
+
+/*
+ * Mixin for make class with all colors
+ */
+@mixin from-colors() {
+
+  @each $key, $value in map_merge($colors, $theme-colors) {
+    @content($key, $value); /* stylelint-disable-line */
+  }
+  @each $key, $value in $grays {
+    @content("gray-#{$key}", $value); /* stylelint-disable-line */
+  }
+}
