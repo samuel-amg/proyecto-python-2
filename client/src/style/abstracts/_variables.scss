@@ -15,7 +15,7 @@ $colors: (
   "burnt-sienna": $burnt-sienna
 );
 
-$base-colors: "blue" "purple" "pink" "red" "orange" "yellow" "green" "gray", "gunmetal", "blue-green", "carmine", "burnt-sienna", "light-gray";
+$base-colors: "blue" "purple" "pink" "red" "orange" "yellow" "green" "gray";
 
 // Theme colors
 // ============================================================================
@@ -35,3 +35,5 @@ $small-font-size: .75rem;
 $font-size-base: 1rem;
 
 @import "~bootstrap/scss/variables";
+
+$body-bg: $gray-100;
