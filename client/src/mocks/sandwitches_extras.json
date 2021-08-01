@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "image": "",
+    "price": 40,
+    "name": "Jamón"
+  },
+  {
+    "id": 2,
+    "image": "",
+    "price": 35,
+    "name": "Champiñones"
+  },
+  {
+    "id": 3,
+    "image": "",
+    "price": 30,
+    "name": "Pimentón"
+  },
+  {
+    "id": 4,
+    "image": "",
+    "price": 40,
+    "name": "Doble queso"
+  },
+  {
+    "id": 5,
+    "image": "",
+    "price": 57.5,
+    "name": "Aceitunas"
+  },
+  {
+    "id": 6,
+    "image": "",
+    "price": 38.5,
+    "name": "Pepperoni"
+  },
+  {
+    "id": 7,
+    "image": "",
+    "price": 62.5,
+    "name": "Salchichón"
+  }
+]
