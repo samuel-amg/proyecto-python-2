@@ -20,6 +20,7 @@ class Ingrediente(models.Model):
     codigo = models.CharField(max_length=2, null=False, unique=True)
     nombre = models.CharField(max_length=100, null=False)
     precio = models.FloatField(null=False)
+    imagen = models.TextField()
 
     def __str__(self):
         return self.nombre
