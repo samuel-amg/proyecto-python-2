@@ -51,13 +51,13 @@ class Sandwich(models.Model):
         
         return total
 
-    def save(self, force_insert=False, force_update=False):
+    def save(self, *args, **kwargs):
 
         if not self.pk:
             self.tamaño_precio=self.tamaño.precio
         self.precio=self.calcularPrecio()
 
-        super(Sandwich, self).save(force_insert, force_update)
+        super(Sandwich, self).save()
 
     def __str__(self):
 
@@ -70,11 +70,11 @@ class IngredientesSandwich(models.Model):
     ingrediente = models.ForeignKey(Ingrediente, on_delete=CASCADE)
     precio = models.FloatField(default=0, null=False, blank=True)
 
-    def save(self, force_insert=False, force_update=False):
+    def save(self, *args, **kwargs):
 
         if not self.pk:
             self.precio=self.ingrediente.precio
-        super(IngredientesSandwich, self).save(force_insert, force_update)
+        super(IngredientesSandwich, self).save(*args, **kwargs)
 
     def __str__(self):
 
@@ -97,10 +97,10 @@ class Orden(models.Model):
         
         return total
 
-    def save(self, force_insert=False, force_update=False):
+    def save(self, *args, **kwargs):
 
         self.total = self.calcularPrecio()
-        super(Orden, self).save(force_insert, force_update)
+        super(Orden, self).save(*args, **kwargs)
 
     def __str__(self):
         return ("Orden para "+self.cliente)
