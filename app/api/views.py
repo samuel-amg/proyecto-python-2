@@ -47,7 +47,7 @@ class tamañoDetails(APIView):
          tamaño = self.get_object(pk)
          tamaño.delete()
          return Response(status=status.HTTP_204_NO_CONTENT)
-    
+
 
 # Ingrediente del sandwich *************************************************************
 class ingredienteList(APIView):
@@ -184,13 +184,49 @@ class ordenList(APIView):
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        serializer = ordenSerializer(data=request.data)
+        order_serializer = ordenSerializer(data={'cliente': request.data['cliente'],
+                                                 'total': request.data['total'],
+                                                 'fecha': request.data['fecha']})
 
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status = status.HTTP_201_CREATED)
+        if order_serializer.is_valid():
+            saved_order = order_serializer.save()
 
-        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+            for sandwich in request.data['sandwiches']:
+                serializer = sandwichSerializer(data={'tamaño': sandwich['size']['id'], 'tamaño_precio': sandwich['size']['precio'], 'precio': sandwich['precio']})
+
+                if serializer.is_valid():
+                    try:
+                        saved_sandwich = serializer.save()
+                    except Exception:
+                        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+                    for extra in sandwich['extras']:
+                        extra_serializer = ingredientesSandwichSerializer(data={'sandwich': saved_sandwich.id,
+                                                                                'ingrediente': extra['id'],
+                                                                                'precio': extra['precio']})
+
+                        if extra_serializer.is_valid():
+                            try:
+                                extra_serializer.save()
+                            except Exception:
+                                return Response(extra_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                        else:
+                            return Response(extra_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+                    order_sandwich_serializer = ordenSandwichSerializer(data={'orden': saved_order.id,
+                                                                              'sandwich': saved_sandwich.id})
+
+                    if order_sandwich_serializer.is_valid():
+                        try:
+                            order_sandwich_serializer.save()
+                        except Exception:
+                            return Response(order_sandwich_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                    else:
+                        return Response(order_sandwich_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    return Response(order_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(order_serializer.data)
+        return Response(order_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ordenDetails(APIView):
     def get_object(self, pk):

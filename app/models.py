@@ -31,38 +31,15 @@ class Sandwich(models.Model):
     tamaño_precio = FloatField(default=0, null=False, blank=True)
     precio = models.FloatField(default=0)
 
-    def listaDeIngredientes(self):
-        all = IngredientesSandwich.objects.all()
-        lista = all.filter(sandwich=self.id)
-        string = ""
-
-        for i in lista:
-            string = string+str(i.ingrediente)+", "
-
-        return string
-
-    def calcularPrecio(self):
-
-        all = IngredientesSandwich.objects.all()
-        lista = all.filter(sandwich=self.id)
-        total = self.tamaño_precio
-
-        for i in lista:
-            total = total+(i.precio)
-        
-        return total
-
     def save(self, *args, **kwargs):
 
         if not self.pk:
             self.tamaño_precio=self.tamaño.precio
-        self.precio=self.calcularPrecio()
 
         super(Sandwich, self).save()
 
     def __str__(self):
-
-        return ("#"+str(self.id)+" - "+str(self.tamaño)+" de "+ self.listaDeIngredientes()) ##??
+        return ("#"+str(self.id)+" - "+str(self.tamaño)) ##??
 
 
 class IngredientesSandwich(models.Model):
@@ -88,19 +65,8 @@ class Orden(models.Model):
     total = models.FloatField(null=True, blank=True)
     fecha = models.DateTimeField(auto_now_add=True, blank=True)
 
-    def calcularPrecio(self):
-
-        all = OrdenSandwich.objects.all()
-        lista = all.filter(orden=self.id)
-        total = 0
-        for i in lista:
-            total = total+(i.sandwich.precio)
-        
-        return total
 
     def save(self, *args, **kwargs):
-
-        self.total = self.calcularPrecio()
         super(Orden, self).save(*args, **kwargs)
 
     def __str__(self):
