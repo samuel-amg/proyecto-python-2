@@ -4,6 +4,7 @@ import {
   Switch,
   Route
 } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 
 import Navbar from './components/Navbar';
 import HomeRoute from './pages/home/HomeRoute';
@@ -21,6 +22,7 @@ export default function App() {
           <Route path="/" component={HomeRoute} />
         </Switch>
       </div>
+      <ToastContainer />
     </BrowserRouter>
   );
 }
