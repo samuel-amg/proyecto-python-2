@@ -1,10 +1,8 @@
+import PropTypes from 'prop-types';
+
 import { IoPencil } from 'react-icons/io5';
 
-import useNewOrder from '../hooks/useNewOrder';
-
-export default function NewOrderClientData() {
-  const { clientNameState, blockClientNameState } = useNewOrder();
-
+export default function NewOrderClientData({ clientNameState, blockClientNameState }) {
   return (
     <div className="mb-5">
       <h4 className="fw-bolder text-body">Nombre del Cliente</h4>
@@ -34,3 +32,8 @@ export default function NewOrderClientData() {
     </div>
   );
 }
+
+NewOrderClientData.propTypes = {
+  clientNameState: PropTypes.array,
+  blockClientNameState: PropTypes.array
+};
