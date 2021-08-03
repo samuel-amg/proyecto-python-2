@@ -3,10 +3,10 @@ import request from './utils/request';
 
 export const api = {
   fetchSandwichSizes() {
-    return request({ url: '/sandwiches/sizes' });
+    return request({ url: '/api/sizes' });
   },
   fetchSandwichesExtras() {
-    return request({ url: '/sandwiches/extras' });
+    return request({ url: '/api/ingredients' });
   },
   fetchAllOrders() {
     return request({ url: '/orders' });
@@ -24,6 +24,6 @@ export const api = {
     return request({ url: '/orders', params: { client_id: clientId } });
   },
   createOrder(order) {
-    return request({ url: '/orders', data: order, method: REST_METHODS.POST });
+    return request({ url: '/api/orders', data: order, method: REST_METHODS.POST });
   }
 };
