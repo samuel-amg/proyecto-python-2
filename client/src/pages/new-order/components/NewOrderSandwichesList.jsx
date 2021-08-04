@@ -5,7 +5,6 @@ import NewOrderSandwichListItem from './NewOrderSandwichListItem';
 export default function NewOrderSandwichesList({ sandwiches, total }) {
   return (
     <>
-      <span className="fs-4 fw-bolder">Resumen</span>
       {sandwiches.length
         ? (
           <div className="row">
@@ -18,8 +17,8 @@ export default function NewOrderSandwichesList({ sandwiches, total }) {
             <div className="col-4 text-end">
               <span className="fw-bold">Precio</span>
             </div>
-            {sandwiches.map((sandwich) => (
-              <NewOrderSandwichListItem sandwich={sandwich} key={`sandwich-${sandwich.id}`} />
+            {sandwiches.map((sandwich, i) => (
+              <NewOrderSandwichListItem sandwich={{ ...sandwich, index: i + 1, size: sandwich.size || sandwich.tamaño }} key={`sandwich-${sandwich.id}`} />
             ))}
           </div>
         )
