@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+
 import errorHandler from '../../../utils/errorHandler';
 import { api } from '../../../api';
 
@@ -19,6 +21,10 @@ export default function useAdmin() {
   };
 
   const getReport = async () => {
+    if (!inputValue) {
+      toast.error('Debe ingresar un filtro');
+      return;
+    }
     try {
       const response = await api.fetchReport(filterParam, inputValue);
       setOrders(response);
