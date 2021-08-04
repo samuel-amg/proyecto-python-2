@@ -1,4 +1,6 @@
-from django.http import Http404, response
+import datetime
+
+from django.http import Http404
 
 from rest_framework import status
 from rest_framework.views import APIView
@@ -136,8 +138,8 @@ class sandwichDetails(APIView):
 # Ingredientes del sandwich **********************************************************************
 
 class ingredientesSandwichList(APIView):
-    def get(self, request, format=None):
-        ingredientesSandwich = IngredientesSandwich.objects.all()
+    def get(self, request, pk, format=None):
+        ingredientesSandwich = IngredientesSandwich.objects.filter(sandwich=pk)
         serializer = ingredientesSandwichSerializer(ingredientesSandwich, many=True)
         return Response(serializer.data)
 
@@ -153,18 +155,18 @@ class ingredientesSandwichList(APIView):
 class ingredientesSandwichDetails(APIView):
     def get_object(self, pk):
         try:
-            return IngredientesSandwich.objects.get(pk=pk)
+            return Ingrediente.objects.get(pk=pk)
         except Sandwich.DoesNotExist:
             raise Http404
     
-    def get(self, request, pk, format = None):
-        ingredientesSandwich = self.get_object(pk)
-        serializer = ingredientesSandwichSerializer(ingredientesSandwich)
+    def get(self, request, ingredient_pk, format=None):
+        ingredient = self.get_object(ingredient_pk)
+        serializer = ingredienteSerializer(ingredient)
         return Response(serializer.data)
 
-    def put(self, request, pk, format = None):
+    def put(self, request, pk):
         ingredientesSandwich = self.get_object(pk)
-        serializer = ingredientesSandwichSerializer(ingredientesSandwich, data = request.data)
+        serializer = ingredientesSandwichSerializer(ingredientesSandwich, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)    
@@ -256,9 +258,9 @@ class ordenDetails(APIView):
 # Sandwich x Orden **************************************************************************
 
 class ordenSandwichList(APIView):
-    def get(self, request, format=None):
-        ordenSandwich = OrdenSandwich.objects.all()
-        serializer = ordenSandwichSerializer(ordenSandwich, many=True)
+    def get(self, request, pk, format=None):
+        ordenSandwich = OrdenSandwich.objects.filter(orden=pk)
+        serializer = sandwichSerializer(Sandwich.objects.filter(id__in=ordenSandwich.values_list('sandwich_id')), many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):
@@ -294,3 +296,63 @@ class ordenSandwichDetails(APIView):
          ordenSandwich = self.get_object(pk)
          ordenSandwich.delete()
          return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ReportList(APIView):
+    def get(self, request, format=None):
+        orders = []
+        response = []
+
+        # Busca la ordenes por fecha
+        if request.GET.get('by_date'):
+            date = datetime.datetime.strptime(request.GET.get('by_date'), '%Y-%m-%d')
+
+            orders = Orden.objects.filter(fecha__range=[datetime.datetime.combine(date, datetime.time.min),
+                                          datetime.datetime.combine(date, datetime.time.max)])
+
+        #BUsca la ordenes por ingrediente
+        elif request.GET.get('by_ingredient'):
+            ingredient_sandwiches = IngredientesSandwich.objects.filter(ingrediente_id=request.GET.get('by_ingredient'))
+
+            orders_sandwiches = OrdenSandwich.objects.filter(sandwich_id__in=ingredient_sandwiches.values_list('sandwich'))
+
+            orders = Orden.objects.filter(id__in=orders_sandwiches.values_list('orden'))
+
+        #Busca las ordenes por cliente
+        elif request.GET.get('by_client'):
+            orders = Orden.objects.filter(cliente=request.GET.get('by_client')).order_by('-total')
+
+        # Busca las ordenes por tamanio de sandwich
+        elif request.GET.get('by_size'):
+            sandwiches = Sandwich.objects.filter(tamaño_id=request.GET.get('by_size'))
+
+            order_sandwiches = OrdenSandwich.objects.filter(sandwich_id__in=sandwiches.values_list('id'))
+
+            orders = Orden.objects.filter(id__in=order_sandwiches.values_list('orden'))
+
+        #Obtiene todas las ordenes
+        else:
+            orders = Orden.objects.all()
+
+        for order in orders:
+            order_sandwiches = OrdenSandwich.objects.filter(orden_id=order.id)
+
+            sandwiches_list = []
+
+            for order_sandwich in order_sandwiches:
+                sandwich_ingredients = IngredientesSandwich.objects.filter(sandwich_id=order_sandwich.sandwich.id)
+
+                ingredients_list = []
+
+                for ingredient in sandwich_ingredients:
+                    ingredients_list.append(ingredienteSerializer(ingredient.ingrediente).data)
+
+                sandwich_serializer = sandwichSerializer(order_sandwich.sandwich)
+                size_serializer = tamañoSerializer(order_sandwich.sandwich.tamaño)
+                sandwiches_list.append({**sandwich_serializer.data, 'tamaño': size_serializer.data,  'extras': ingredients_list})
+
+            order_serializer = ordenSerializer(order)
+
+            response.append({**order_serializer.data, 'sandwiches': sandwiches_list})
+
+        return Response(response)
